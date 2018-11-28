@@ -6,6 +6,7 @@ onready var bulletSpawnPosition = $BulletSpawnPosition1
 onready var screenShake = get_parent().get_node("ScreenShake")
 onready var sndShoot = $AudioShoot
 onready var sndExplosion = $AudioExplosion
+onready var respawnTimer = $RespawnTimer
 
 var Bullet = preload("res://objects/bullet/Bullet.tscn")
 
@@ -55,7 +56,7 @@ func _physics_process(delta):
 			motion = lastMotion
 		
 		wait_double_click()
-		check_outside_screen()
+		wrap()
 		
 		move_and_slide(motion)
 		check_collisions()
@@ -63,7 +64,8 @@ func _physics_process(delta):
 func die():
 	isAlive = false
 	sndExplosion.play()
-	queue_free()
+	visible = false
+	respawnTimer.start()
 
 func check_collisions():
 	if get_slide_count() > 0:
@@ -90,11 +92,18 @@ func get_bullet_spawn_position(p):
 	
 func invert_rotation():
 	rotSpeed *= -1
+
+func wrap():
+	if position.x < 0:
+		position = Vector2( get_viewport_rect().size.x, position.y)
+	elif position.x > get_viewport_rect().size.x:
+		position = Vector2(0, position.y)
 	
-func check_outside_screen():
-	if position.x < 0 or position.x > 320 or position.y < 0 or position.y > 240:
-		die()
-	
+	if position.y < 0:
+		position = Vector2(position.x, get_viewport_rect().size.y)
+	elif position.y > get_viewport_rect().size.y:
+		position = Vector2(position.x, 0)
+
 func wait_double_click():
 	if isWaitingDoubleClick:
 		doubleClickTimeCounter -= 1
@@ -106,6 +115,6 @@ func wait_double_click():
 			isWaitingDoubleClick = false
 			doubleClickTimeCounter = DOUBLE_CLICK_TIME
 
-func _on_VisibilityNotifier2D_screen_exited():
-	print("SAIUUU")
-	die()
+
+func _on_RespawnTimer_timeout():
+	get_tree().change_scene( "scenes/Game.tscn" )

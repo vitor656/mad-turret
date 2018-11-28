@@ -48,21 +48,17 @@ _sections_unfolded = [ "Transform" ]
 position = Vector2( 10, 0 )
 _sections_unfolded = [ "Transform" ]
 
-[node name="VisibilityNotifier2D" type="VisibilityNotifier2D" parent="." index="5"]
-
-rect = Rect2( -5, -5, 10, 10 )
-
-[node name="BulletSpawnPosition2" type="Position2D" parent="." index="6"]
+[node name="BulletSpawnPosition2" type="Position2D" parent="." index="5"]
 
 position = Vector2( 10, 1 )
 _sections_unfolded = [ "Transform", "Z Index" ]
 
-[node name="BulletSpawnPosition3" type="Position2D" parent="." index="7"]
+[node name="BulletSpawnPosition3" type="Position2D" parent="." index="6"]
 
 position = Vector2( 10, -1 )
 _sections_unfolded = [ "Transform" ]
 
-[node name="AudioShoot" type="AudioStreamPlayer2D" parent="." index="8"]
+[node name="AudioShoot" type="AudioStreamPlayer2D" parent="." index="7"]
 
 stream = ExtResource( 4 )
 volume_db = 0.0
@@ -73,7 +69,7 @@ attenuation = 1.0
 bus = "Master"
 area_mask = 1
 
-[node name="AudioExplosion" type="AudioStreamPlayer2D" parent="." index="9"]
+[node name="AudioExplosion" type="AudioStreamPlayer2D" parent="." index="8"]
 
 stream = ExtResource( 5 )
 volume_db = 0.0
@@ -84,6 +80,13 @@ attenuation = 1.0
 bus = "Master"
 area_mask = 1
 
-[connection signal="screen_exited" from="VisibilityNotifier2D" to="." method="_on_VisibilityNotifier2D_screen_exited"]
+[node name="RespawnTimer" type="Timer" parent="." index="9"]
+
+process_mode = 1
+wait_time = 2.0
+one_shot = true
+autostart = false
+
+[connection signal="timeout" from="RespawnTimer" to="." method="_on_RespawnTimer_timeout"]
 
 

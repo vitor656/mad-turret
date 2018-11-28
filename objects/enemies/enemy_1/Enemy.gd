@@ -1,6 +1,7 @@
 extends KinematicBody2D
 
 onready var sndExplosion = $AudioExplosion
+onready var deadTimer = $DeadTimer
 
 var life = 3
 var speed = 5
@@ -21,6 +22,11 @@ func locate_player():
 func take_damage():
 	life -= 1
 	if life <= 0:
-		queue_free()
+		visible = false
+		$CollisionShape2D.disabled = true
 		get_parent().update_score()
 		sndExplosion.play()
+		deadTimer.start()
+
+func _on_DeadTimer_timeout():
+	queue_free()

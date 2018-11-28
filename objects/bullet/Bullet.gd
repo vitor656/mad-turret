@@ -20,3 +20,6 @@ func _physics_process(delta):
 			if "Enemy" in collider.name:
 				queue_free()
 				collider.take_damage()
+
+func _on_VisibilityNotifier2D_screen_exited():
+	queue_free()
